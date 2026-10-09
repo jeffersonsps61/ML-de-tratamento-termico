@@ -3,8 +3,8 @@ import streamlit as st
 import pandas as pd
 import numpy as np
 
-# Importa as funções do teu módulo existente
-from recomendador_revenimento_5 import carregar, recomendar
+# Importação corrigida para o seu arquivo recomendador_revenimento.py
+from recomendador_revenimento import carregar, recomendar
 
 st.set_page_config(
     page_title="Recomendador de Revenimento",
@@ -12,10 +12,9 @@ st.set_page_config(
     layout="wide"
 )
 
-st.title("🔥 Recomendador de Temperatura de Revenimento (v2.0)")
+st.title("🔥 Recomendador de Temperatura de Revenimento")
 st.markdown("---")
 
-# Carregamento do Modelo com Cache para alta performance
 MODELO_PATH = "recomendador_rv.joblib"
 
 @st.cache_resource
@@ -28,7 +27,6 @@ def carregar_modelo_cache():
 modelo = carregar_modelo_cache()
 
 if modelo is not None:
-    # Sidebar com Parâmetros de Entrada
     st.sidebar.header("📋 Parâmetros da Peça / Ordem")
     
     materiais_disponiveis = modelo.get("materiais", ["4140", "4340", "8630", "18CRNIMO7-6", "OUTRO"])
@@ -46,7 +44,6 @@ if modelo is not None:
     dimensoes = st.sidebar.text_input("Dimensões (ex: 32x3510, 250x750)", value="32x3510")
     peca = st.sidebar.selectbox("Grupo / Tipo de Peça", ["BARRA", "DISCO", "TARUGO", "EIXO", "CORPO", "ANEL", "TUBO", "OUTRO"])
     
-    # Opções Avançadas (Expandable)
     with st.sidebar.expander("⚙️ Opções Avançadas (Têmpera / Forno)"):
         centro_trabalho = st.text_input("Centro de Trabalho / Forno", value="")
         centro_trabalho = centro_trabalho if centro_trabalho.strip() else None
@@ -65,7 +62,6 @@ if modelo is not None:
         
         normalizado = st.checkbox("Normalização Prévia", value=False)
 
-    # Botão para Executar Recomendação
     if st.sidebar.button("🚀 Gerar Recomendação", type="primary"):
         try:
             res = recomendar(
@@ -87,7 +83,6 @@ if modelo is not None:
                 imprimir=False
             )
             
-            # Exibição dos Resultados Principais
             st.subheader("🎯 Resultado da Recomendação")
             
             c1, c2, c3, c4 = st.columns(4)
@@ -99,7 +94,6 @@ if modelo is not None:
             
             st.markdown("---")
             
-            # Detalhes do Modelo e Avisos
             col_left, col_right = st.columns(2)
             
             with col_left:
